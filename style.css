@@ -1,0 +1,204 @@
+:root {
+    --bg-color: #1a1b1e;
+    --text-color: #e1e3e6;
+    --knob-size: 200px;
+    --knob-color: #2c2e33;
+    --accent-color: #00ff88;
+    /* Cyberpunkish green/cyan */
+    --shadow-light: rgba(255, 255, 255, 0.05);
+    --shadow-dark: rgba(0, 0, 0, 0.6);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    user-select: none;
+}
+
+.container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+h1 {
+    font-weight: 600;
+    margin-bottom: 5px;
+    text-shadow: 0 2px 4px var(--shadow-dark);
+}
+
+.instruction {
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 30px;
+}
+
+/* --- Knob Styling --- */
+.knob-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.knob-outer-ring {
+    position: relative;
+    width: var(--knob-size);
+    height: var(--knob-size);
+    border-radius: 50%;
+    background: conic-gradient(from 180deg,
+            #222 0deg,
+            #444 90deg,
+            #222 180deg,
+            #444 270deg,
+            #222 360deg);
+    box-shadow:
+        -10px -10px 20px var(--shadow-light),
+        10px 10px 20px var(--shadow-dark),
+        inset 0 0 5px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Tick marks around the knob */
+.knob-marks {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* We could generate ticks with JS or repeated linear-gradients, 
+   but for simplicity, let's use a pseudo-element ring for now 
+   or just the gradient texture on the background. 
+   A simple dot scale is also nice. */
+
+.knob {
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #32353b, #25272b);
+    box-shadow:
+        5px 5px 10px var(--shadow-dark),
+        -5px -5px 10px var(--shadow-light);
+    position: relative;
+    cursor: pointer;
+    /* Interaction mainly via gesture, but also mouse compatible physically */
+    transition: transform 0.1s cubic-bezier(0.1, 0, 0.3, 1), box-shadow 0.2s ease;
+    transform: rotate(0deg);
+    /* Controlled by JS */
+}
+
+.knob.active {
+    box-shadow:
+        0 0 15px var(--accent-color),
+        5px 5px 10px var(--shadow-dark),
+        -5px -5px 10px var(--shadow-light);
+}
+
+.knob-top {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.05), transparent 60%),
+        linear-gradient(145deg, #2a2c30, #1f2125);
+    box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+}
+
+.knob-indicator {
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    box-shadow: 0 0 5px var(--accent-color), 0 0 10px var(--accent-color);
+}
+
+/* Volume Display */
+#volumeValue {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5rem;
+    font-weight: 500;
+    color: #ffffff;
+    /* Embedded Look */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    pointer-events: none;
+    z-index: 10;
+    font-family: 'Orbitron', sans-serif;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.35;
+    letter-spacing: 3px;
+}
+
+/* Audio Controls */
+.audio-controls {
+    margin-top: 20px;
+}
+
+.btn {
+    background: linear-gradient(135deg, #333, #222);
+    border: none;
+    border-radius: 50%;
+    color: #ffffff;
+    /* Match font color */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    box-shadow: 5px 5px 10px var(--shadow-dark), -2px -2px 5px var(--shadow-light);
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    opacity: 0.35;
+}
+
+.btn:active {
+    box-shadow: inset 2px 2px 5px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+    transform: scale(0.95);
+}
+
+.btn .material-icons {
+    font-size: 2rem;
+}
+
+.output_canvas {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 160px;
+    height: 120px;
+    border-radius: 8px;
+    opacity: 0.7;
+    pointer-events: none;
+    transform: scaleX(-1);
+    /* Mirror effect for intuitive feedback */
+    border: 1px solid #333;
+}
